@@ -27,7 +27,7 @@ jobs:
   security:
     name: Security scan
     runs-on: ubuntu-latest
-    needs: compile 
+    needs: test 
     steps:
       - uses: actions/checkout@v4
       - name: Install Trivy

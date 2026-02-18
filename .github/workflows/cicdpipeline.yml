@@ -23,3 +23,25 @@ jobs:
     # compile the project
     - name: Compile
       run: mvn compile
+  # Step2: Security scan job
+  security:
+    name: Security scan
+    runs-on: ubuntu-latest
+    needs: compile 
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Trivy
+        run: |
+          sudo apt-get install wget gnupg -y
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy -y
+  # Run Trivy scan on filesystem
+      - name: Trivy scan filesystem
+        run: trivy fs --format table -o fs-report.txt .
+      - name: upload scan report
+        uses: actions/upload-artifact@v4
+        with:
+         name: security-reports
+         path: fs-report.txt

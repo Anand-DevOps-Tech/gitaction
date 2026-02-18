@@ -7,8 +7,8 @@ on:
 
 jobs:
   # Step1: Compile job
-  compile:
-    name: compile java project
+  test:
+    name: test java project
     runs-on: ubuntu-latest
     steps:
     # Checkout the repo
@@ -21,8 +21,8 @@ jobs:
         distribution: 'temurin'
         cache: maven
     # compile the project
-    - name: Compile
-      run: mvn compile
+    - name: test
+      run: mvn test
   # Step2: Security scan job
   security:
     name: Security scan
